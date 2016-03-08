@@ -47,6 +47,7 @@
 #define QPNP_WLED_VLOOP_COMP_RES_REG(b)	(b + 0x55)
 #define QPNP_WLED_VLOOP_COMP_GM_REG(b)	(b + 0x56)
 #define QPNP_WLED_EN_PSM_REG(b)		(b + 0x5A)
+#define QPNP_WLED_PSM_EN_REG(b)		(b + 0x5A)
 #define QPNP_WLED_PSM_CTRL_REG(b)	(b + 0x5B)
 #define QPNP_WLED_LCD_AUTO_PFM_REG(b)	(b + 0x5C)
 #define QPNP_WLED_SC_PRO_REG(b)		(b + 0x5E)
@@ -79,6 +80,8 @@
 #define QPNP_WLED_LOOP_EA_GM_MAX			0xF
 #define QPNP_WLED_LOOP_AUTO_GM_THRESH_MAX		3
 #define QPNP_WLED_LOOP_AUTO_GM_DFLT_THRESH		1
+#define QPNP_WLED_PSM_ENABLE				0x80
+#define QPNP_WLED_PSM_DISABLE				0x00
 #define QPNP_WLED_VREF_PSM_MASK				0xF8
 #define QPNP_WLED_VREF_PSM_STEP_MV			50
 #define QPNP_WLED_VREF_PSM_MIN_MV			400
@@ -360,6 +363,7 @@ static struct wled_vref_setting vref_setting_pmi8998 = {
  *  @ en_cabc - enable or disable cabc
  *  @ disp_type_amoled - type of display: LCD/AMOLED
  *  @ en_ext_pfet_sc_pro - enable sc protection on external pfet
+ *  @ en_amoled_psm - Enable Pulse skipping mode in AMOLED mode
  *  @ prev_state - previous state of WLED
  *  @ stepper_en - Flag to enable stepper algorithm
  *  @ ovp_irq_disabled - OVP interrupt disable status
@@ -419,6 +423,7 @@ struct qpnp_wled {
 	bool			disp_type_amoled;
 	bool			en_ext_pfet_sc_pro;
 	bool			prev_state;
+	bool			en_amoled_psm;
 	bool			stepper_en;
 	bool			ovp_irq_disabled;
 	bool			secure_mode;
@@ -1236,6 +1241,14 @@ static int qpnp_wled_set_disp(struct qpnp_wled *wled, u16 base_addr)
 				QPNP_WLED_PSM_CTRL_REG(wled->ctrl_base), reg);
 		if (rc)
 			return rc;
+
+		/* PSM EN register for AMOLED */
+		if (wled->en_amoled_psm)
+			reg = QPNP_WLED_PSM_ENABLE;
+		else
+			reg = QPNP_WLED_PSM_DISABLE;
+		rc = qpnp_wled_write_reg(wled, &reg,
+					QPNP_WLED_PSM_EN_REG(wled->ctrl_base));
 
 		/* Configure the VLOOP COMP RES register for AMOLED */
 		if (wled->loop_comp_res_kohm < QPNP_WLED_LOOP_COMP_RES_MIN_KOHM)
@@ -2408,6 +2421,9 @@ static int qpnp_wled_parse_dt(struct qpnp_wled *wled)
 			dev_err(&pdev->dev, "Unable to read avdd target voltage\n");
 			return rc;
 		}
+
+		wled->en_amoled_psm = of_property_read_bool(spmi->dev.of_node,
+				"qcom,enable-amoled-pulse-skipping");
 	}
 
 	if (wled->disp_type_amoled) {
