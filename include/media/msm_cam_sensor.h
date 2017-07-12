@@ -1,6 +1,10 @@
 #ifndef __LINUX_MSM_CAM_SENSOR_H
 #define __LINUX_MSM_CAM_SENSOR_H
 
+#ifdef CONFIG_LENOVO_DIR_CAMERA
+#include <media/msm_cam_sensor_lenovo.h>
+#else
+
 #include <uapi/media/msm_cam_sensor.h>
 #include <uapi/media/msm_camsensor_sdk.h>
 

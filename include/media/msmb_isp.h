@@ -12,6 +12,10 @@
 #ifndef __MSMB_ISP__
 #define __MSMB_ISP__
 
+#ifdef CONFIG_LENOVO_DIR_CAMERA
+#include <media/msmb_isp_lenovo.h>
+#else
+
 #include <uapi/media/msmb_isp.h>
 
 #ifdef CONFIG_COMPAT
@@ -42,6 +46,7 @@ struct msm_isp32_event_data32 {
 };
 
 #endif
+#endif
 #ifdef CONFIG_MSM_AVTIMER
 struct avtimer_fptr_t {
 	int (*fptr_avtimer_open)(void);
@@ -51,4 +56,3 @@ struct avtimer_fptr_t {
 void msm_isp_set_avtimer_fptr(struct avtimer_fptr_t avtimer_func);
 #endif
 #endif
-
