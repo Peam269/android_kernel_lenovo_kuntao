@@ -113,6 +113,7 @@
 	usb3: ssusb@7000000{
 		qcom,connector-type-uAB;
 		qcom,usbid-gpio = <&tlmm 62 0>;
+		extcon = <&qpnp_smbcharger>;
 		pinctrl-names = "usbid_default", "usbid_deactive";
 		pinctrl-0 = <&usb_id_active>;
 		pinctrl-1 = <&usb_id_deactive>;
