@@ -59,13 +59,10 @@
 			pinctrl-1 = <&rear_flash_led_disable>;
 		};
 
-		pmi_haptic: qcom,haptics@c000 {
-			qcom,play-mode = "buffer";
-			qcom,wave-play-rate-us = <4263>;
-			qcom,vmax-mv = <3200>;
-			qcom,ilim-ma = <100>;
-			qcom,brake-pattern = [03 02 00 00];
-			qcom,wave-samples = [5c 5c 5c 5c 5c 5c 5c 5c];
+		pmi_haptic: qcom,haptic@c000 {
+			qcom,actuator-type = <1>;
+			qcom,use-play-irq;
+			qcom,use-sc-irq;
 		};
 	};
 };
