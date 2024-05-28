@@ -130,6 +130,15 @@ endif
 ifdef CONFIG_SND_SOC_MSM_STUB
 	STUB_OBJS += msm_stub.o
 endif
+
+ifdef CONFIG_SND_SOC_TAS2555
+	TAS2555_OBJS += tas2555-core.o
+	TAS2555_OBJS += tas2555-misc.o
+	TAS2555_OBJS += tas2555-codec.o
+	TAS2555_OBJS += tas2555-regmap.o
+	TAS2555_OBJS += tiload.o
+endif
+
 ifdef CONFIG_SND_SOC_WCD_SPI
 	SPI_OBJS += wcd-spi.o
 endif
@@ -219,6 +228,9 @@ wsa881x_analog_dlkm-y := $(WSA881X_ANALOG_OBJS)
 
 obj-$(CONFIG_SND_SOC_MSM_STUB) += stub_dlkm.o
 stub_dlkm-y := $(STUB_OBJS)
+
+obj-$(CONFIG_SND_SOC_TAS2555) += tas2555_dlkm.o
+tas2555_dlkm-y := $(TAS2555_OBJS)
 
 obj-$(CONFIG_SND_SOC_WCD_CPE) += wcd_cpe_dlkm.o
 wcd_cpe_dlkm-y := $(WCD_CPE_OBJS)
