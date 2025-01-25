@@ -96,6 +96,14 @@
 			<&dma_blsp1 11 32 0x20000020 0x20>;
 		dma-names = "tx", "rx";
 	};
+
+	qcom,memshare {
+		compatible = "qcom,memshare";
+
+		mem_client_3_size: qcom,client_3 {
+			qcom,peripheral-size = <0x500000>;
+		};
+	};
 };
 
 &spi_3 { /* BLSP1 QUP3 */
@@ -463,10 +471,6 @@
 	pinctrl-0 = <&uart_console_active>;
 };
 
-&mem_client_3_size {
-	qcom,peripheral-size = <0x500000>;
-};
-
 &sdhc_1 {
 	/* device core power supply */
 	vdd-supply = <&pm8953_l8>;
@@ -554,7 +558,7 @@
 	};
 };
 
-&pmi8950_fg {
+&qpnp_fg {
 	qcom,battery-data = <&mtp_batterydata>;
 	qcom,fg-vadc = <&pmi8950_vadc>;
 	qcom,fg-delta-soc = <1>;
@@ -564,7 +568,7 @@
 	qcom,hold-soc-while-full;
 };
 
-&pmi8950_charger {
+&qpnp_smbcharger {
 	status = "disabled";
 };
 
